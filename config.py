@@ -11,7 +11,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 
 # Connect to the MYSQL database
-SQLALCHEMY_DATABASE_URI = 'mysql://root:<your_password>@localhost/<your_database_name>'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///simple-shop.db'
 
 # Turn off the Flask-SQLAlchemy event system and warning
 SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -1,6 +1,6 @@
 import json
-from models.machine import Inserttable, db
-from services.user_service import insert_logic, create_logic
+from models.machine import db
+from services.user_service import create_logic
 
 def index():
     return {'status': 'OK',
@@ -13,7 +13,7 @@ def create():
     create_logic()
 
 
-# insert data into table.
-def insert():
+# # insert data into table.
+# def insert():
     
-    insert_logic()    
+#     insert_logic()    
