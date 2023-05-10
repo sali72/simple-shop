@@ -16,7 +16,7 @@ def create_app():
 
 app = create_app()  # Creating the app
 # Registering the blueprint
-app.register_blueprint(blueprint)
+app.register_blueprint(blueprint, url_prefix='/v1/shop')
 migrate = Migrate(app, db)  # Initializing the migration
 
 

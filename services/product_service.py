@@ -3,16 +3,16 @@ from flask import jsonify
 from models.models import  db
 from models.models import Product
 
-def create_product_logic():
+def create_product_logic(product:Product):
     try:
         # create  if not exists.
-        
+        db.session.add(product)
         db.session.commit()
-        return 'json'
+        return 200
 
     except Exception as e:
         print(e)
-        return 'json error'
+        return 'json error', 400
     
 def read_all_product_logic():
     try:

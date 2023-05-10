@@ -27,6 +27,12 @@ class User(db.Model):
     receipts = relationship("Receipt", back_populates='user')
 
 
+receipt_product = db.Table(
+    'receipt_product',
+    db.Column('receipt_id', db.Integer, db.ForeignKey('receipt.id'), primary_key=True),
+    db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True)
+)
+
 class Receipt(db.Model):
     __tablename__ = 'receipt'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -35,19 +41,11 @@ class Receipt(db.Model):
     # one receipt has one user
     user = relationship("User", back_populates='receipts')
     # one receipt has many products
-    receipt_products = relationship("ReceiptProduct", back_populates='receipt')
+    products = db.relationship('Product', secondary=receipt_product, back_populates='receipts')
 
-
-class ReceiptProduct(db.Model):
-    __tablename__ = 'receipt_product'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    count = db.Column(db.Integer)
-    receipt_id = db.Column(db.Integer, db.ForeignKey("receipt.id"))
-    # one receipt_product has one receipt
-    receipt = relationship("Receipt", back_populates='receipt_products')
-    product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
-    # one receipt_product has one product
-    product = relationship("Product", back_populates='receipt_products')
+    # products = db.relationship('Product', secondary=receipt_product, lazy='subquery', 
+    #                 #  back_populates='receipts' , 
+    #                 backref=db.backref('receipts', lazy=True))
 
 
 class Product(db.Model):
@@ -56,5 +54,7 @@ class Product(db.Model):
     name = db.Column(db.String(100), primary_key=False)
     description = db.Column(db.String(100))
     price = db.Column(db.Integer)
+    count = db.Column(db.Integer)
     # one product has many receipt_product
-    receipt_products = relationship("ReceiptProduct", back_populates='product')
+    receipts = db.relationship('Receipt', secondary=receipt_product, back_populates='products')
+
