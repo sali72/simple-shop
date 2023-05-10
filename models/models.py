@@ -35,7 +35,7 @@ class Receipt(db.Model):
     # one receipt has one user
     user = relationship("User", back_populates='receipts')
     # one receipt has many products
-    products = relationship("ReceiptProduct", back_populates='receipt')
+    receipt_products = relationship("ReceiptProduct", back_populates='receipt')
 
 
 class ReceiptProduct(db.Model):
@@ -44,10 +44,10 @@ class ReceiptProduct(db.Model):
     count = db.Column(db.Integer)
     receipt_id = db.Column(db.Integer, db.ForeignKey("receipt.id"))
     # one receipt_product has one receipt
-    receipt = relationship("User", back_populates='receipts')
+    receipt = relationship("Receipt", back_populates='receipt_products')
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     # one receipt_product has one product
-    product = relationship("Product", back_populates='receipts')
+    product = relationship("Product", back_populates='receipt_products')
 
 
 class Product(db.Model):

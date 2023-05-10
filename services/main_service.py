@@ -1,5 +1,5 @@
 import json
-from models.machine import  db
+from models.models import  db
 
 def create_logic():
     try:

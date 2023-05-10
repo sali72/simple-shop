@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_migrate import Migrate
 from routes.blueprint import blueprint
-from models.machine import db
+from models.models import db
 
-from services.user_service import create_logic
+from services.main_service import create_logic
 
 
 def create_app():
@@ -16,11 +16,8 @@ def create_app():
 
 app = create_app()  # Creating the app
 # Registering the blueprint
-app.register_blueprint(blueprint, url_prefix='/machines')
+app.register_blueprint(blueprint)
 migrate = Migrate(app, db)  # Initializing the migration
-
-with app.app_context():
-    create_logic()
 
 
 if __name__ == '__main__':  # Running the app
