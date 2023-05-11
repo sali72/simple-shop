@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from sqlalchemy_serializer import SerializerMixin
 
 db = SQLAlchemy()
 
@@ -16,7 +17,7 @@ db = SQLAlchemy()
 #         return '<machineid %r>' % self.machineid
 
 
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Integer, primary_key=False)
@@ -33,7 +34,7 @@ receipt_product = db.Table(
     db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True)
 )
 
-class Receipt(db.Model):
+class Receipt(db.Model, SerializerMixin):
     __tablename__ = 'receipt'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     date = db.Column(db.Integer, primary_key=False)
@@ -48,10 +49,15 @@ class Receipt(db.Model):
     #                 backref=db.backref('receipts', lazy=True))
 
 
-class Product(db.Model):
+class Product(db.Model, SerializerMixin):
     __tablename__ = 'product'
+
+    serialize_only = ('id', 'name', 'description', 'price', 'count')
+    # serialize_rules = ('-receipts')
+    # serialize_rules = ('-users.login.users',)
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(100), primary_key=False)
+    name = db.Column(db.String(100), unique=True, primary_key=False)
     description = db.Column(db.String(100))
     price = db.Column(db.Integer)
     count = db.Column(db.Integer)
