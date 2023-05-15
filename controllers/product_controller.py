@@ -1,12 +1,16 @@
 import json
 from flask import request
 from flask_restful import Resource
+from flask_login import login_required
+from security import admin_only, load_user
 from models.models import db
 from services.product_service import *
 
 
 class ProductsList(Resource):
     # Create a product
+    @login_required
+    @admin_only
     def post(self):
         return create_product_logic(json_to_product())
     # Read all products
@@ -21,7 +25,7 @@ class Products(Resource):
         return update_product_logic(id, json_to_product())
 
     def delete(self, id):
-        pass
+        return delete_product_logic(id)
 
 def json_to_product():
     json_product = request.get_json()

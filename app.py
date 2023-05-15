@@ -2,8 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from routes.blueprint import blueprint
 from models.models import db
-
-from services.main_service import create_logic
+from security import login_manager
 
 
 def create_app():
@@ -18,6 +17,9 @@ app = create_app()  # Creating the app
 # Registering the blueprint
 app.register_blueprint(blueprint, url_prefix='/v1/shop')
 migrate = Migrate(app, db)  # Initializing the migration
+
+# Config flask login
+login_manager.init_app(app)
 
 
 if __name__ == '__main__':  # Running the app

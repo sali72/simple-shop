@@ -13,7 +13,4 @@ def create():
     return create_logic()
 
 
-# # insert data into table.
-# def insert():
-    
-#     insert_logic()    
+

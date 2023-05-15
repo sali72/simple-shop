@@ -1,23 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy_serializer import SerializerMixin
+from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 
 db = SQLAlchemy()
 
 
-# class Inserttable(db.Model):
-#     '''Data for ON/OFF should be dumped in this table.'''
-#     __tablename__ = 'inserttable'
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     machineid = db.Column(db.Integer, primary_key=False)
-#     stateid = db.Column(db.Integer, primary_key=False)
-#     state = db.Column(db.String(80), nullable=False)
-
-#     def __repr__(self):
-#         return '<machineid %r>' % self.machineid
-
-
-class User(db.Model, SerializerMixin):
+class User(db.Model, SerializerMixin, UserMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Integer, primary_key=False)

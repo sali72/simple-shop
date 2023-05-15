@@ -2,16 +2,7 @@ import json
 from flask import jsonify
 from models.models import  db
 from models.models import Product
-
-# exception_handler decorator
-def exception_handler(func):
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except Exception as e:
-            print(e)
-            return {"error": "Something went wrong !"}, 400
-    return wrapper
+from services.main_service import exception_handler
 
 # main methods
 @exception_handler
@@ -44,10 +35,17 @@ def update_product_logic(id, updated_product:Product):
     db.session.commit()
     return {"success": "Product updated"}, 200
 
+@exception_handler
+def delete_product_logic(id):
+    product = get_product(id)
+    db.session.delete(product)
+    db.session.commit()
+    return {"success": "Product deleted"}, 200
     
 # helping methods
 def get_product(id):
     return db.session.query(Product).get(id)
+
     
 
 
