@@ -9,7 +9,6 @@ from services.product_service import *
 
 class ProductsList(Resource):
     # Create a product
-    @login_required
     @admin_only
     def post(self):
         return create_product_logic(json_to_product())
@@ -21,9 +20,10 @@ class Products(Resource):
     def get(self, id):
         return read_one_product_logic(id)
 
+    @admin_only
     def put(self, id):
         return update_product_logic(id, json_to_product())
-
+    @admin_only
     def delete(self, id):
         return delete_product_logic(id)
 

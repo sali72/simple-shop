@@ -17,5 +17,7 @@ api.add_resource(Products,  '/products/<int:id>')
 
 # user routs
 api.add_resource(Login, '/login')
+api.add_resource(Logout, '/logout')
+api.add_resource(Register, '/register')
 api.add_resource(UsersList, '/users')
 api.add_resource(Users,  '/users/<int:id>')

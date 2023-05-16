@@ -18,6 +18,3 @@ def admin_only(f):
 @login_manager.user_loader
 def load_user(user_id):
     return get_user(user_id)
-
-def logout():
-    logout_user()
