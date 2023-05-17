@@ -27,6 +27,8 @@ class Receipt(db.Model, SerializerMixin):
     __tablename__ = 'receipt'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     date = db.Column(db.Integer, primary_key=False)
+    is_finalized = db.Column(db.Boolean)
+
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     # one receipt has one user
     user = relationship("User", back_populates='receipts')
