@@ -3,6 +3,7 @@ from flask_restful import Resource, Api
 from controllers.main_controller import index, create
 from controllers.product_controller import ProductsList, Products
 from controllers.user_controller import *
+from controllers.receipt_controller import *
 
 
 blueprint = Blueprint('api', __name__)
@@ -21,3 +22,6 @@ api.add_resource(Logout, '/logout')
 api.add_resource(Register, '/register')
 api.add_resource(UsersList, '/users')
 api.add_resource(Users,  '/users/<int:id>')
+
+# receipt routs
+api.add_resource(Buy, '/buy')

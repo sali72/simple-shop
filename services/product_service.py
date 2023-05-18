@@ -14,20 +14,15 @@ def create_product_logic(product:Product):
 
 @exception_handler   
 def read_all_product_logic():
-    products = db.session.query(Product).all()
-    json_products = []
-    for product in products:
-        json_products.append(product.to_dict())
-    return json_products, 200
+    return db.session.query(Product).all()
     
 @exception_handler
 def read_one_product_logic(id):
-    product = get_product(id)
-    return product.to_dict(), 200
+    return db.session.query(Product).get(id)
 
 @exception_handler
 def update_product_logic(id, updated_product:Product):
-    product = get_product(id)
+    product = read_one_product_logic(id)
     product.name = updated_product.name
     product.description = updated_product.description
     product.count = updated_product.count
@@ -37,14 +32,11 @@ def update_product_logic(id, updated_product:Product):
 
 @exception_handler
 def delete_product_logic(id):
-    product = get_product(id)
+    product = read_one_product_logic(id)
     db.session.delete(product)
     db.session.commit()
     return {"success": "Product deleted"}, 200
     
-# helping methods
-def get_product(id):
-    return db.session.query(Product).get(id)
 
     
 

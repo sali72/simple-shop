@@ -15,11 +15,7 @@ def create_user_logic(user:User):
 
 @exception_handler   
 def read_all_user_logic():
-    users = db.session.query(User).all()
-    json_users = []
-    for user in users:
-        json_users.append(user.to_dict())
-    return json_users, 200
+    return db.session.query(User).all()
 
 @exception_handler
 def read_user_by_email_logic(email):
@@ -27,12 +23,11 @@ def read_user_by_email_logic(email):
 
 @exception_handler
 def read_one_user_logic(id):
-    user = get_user(id)
-    return user.to_dict(), 200
+    return db.session.query(User).get(id)
 
 @exception_handler
 def update_user_logic(id, updated_user:User):
-    user = get_user(id)
+    user = read_one_user_logic(id)
     user.name = updated_user.name
     user.description = updated_user.description
     user.count = updated_user.count
@@ -42,15 +37,11 @@ def update_user_logic(id, updated_user:User):
 
 @exception_handler
 def delete_user_logic(id):
-    user = get_user(id)
+    user = read_one_user_logic(id)
     db.session.delete(user)
     db.session.commit()
     return {"success": "User deleted"}, 200
-
-# helping methods
-@exception_handler
-def get_user(id):
-    return db.session.query(User).get(id)
+    
 
 
     

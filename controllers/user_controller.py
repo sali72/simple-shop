@@ -38,7 +38,6 @@ class Logout(Resource):
         logout_user()
         return {"success": f'{user_name} logged out'}, 200
 
-
 class UsersList(Resource):
     # Create a user
     @admin_only
@@ -47,12 +46,16 @@ class UsersList(Resource):
     # Read all users
     @admin_only
     def get(self):
-        return read_all_user_logic()
+        users = read_all_user_logic()
+        json_users = []
+        for user in users:
+            json_users.append(user.to_dict())
+        return json_users, 200
 
 class Users(Resource):
     @admin_only
     def get(self, id):
-        return read_one_user_logic(id)
+        return read_one_user_logic(id).to_dict(), 200
 
     @admin_only
     def put(self, id):

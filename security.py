@@ -1,7 +1,7 @@
 from flask_login import LoginManager, current_user, logout_user
 from functools import wraps
 from flask import abort
-from services.user_service import get_user
+from services.user_service import read_one_user_logic
 
 
 login_manager = LoginManager()
@@ -17,4 +17,4 @@ def admin_only(f):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return get_user(user_id)
+    return read_one_user_logic(user_id)

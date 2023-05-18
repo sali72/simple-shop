@@ -11,27 +11,35 @@ class ProductsList(Resource):
     # Create a product
     @admin_only
     def post(self):
-        return create_product_logic(json_to_product())
+        return create_product_logic(json_to_product(request.get_json()))
     # Read all products
     def get(self):
-        return read_all_product_logic()
+        products = read_all_product_logic()
+        json_products = []
+        for product in products:
+            json_products.append(product.to_dict())
+        return json_products, 200
 
 class Products(Resource):
     def get(self, id):
-        return read_one_product_logic(id)
+        return read_one_product_logic(id).to_dict(), 200
 
     @admin_only
     def put(self, id):
-        return update_product_logic(id, json_to_product())
+        return update_product_logic(id, json_to_product(request.get_json()))
     @admin_only
     def delete(self, id):
         return delete_product_logic(id)
 
-def json_to_product():
-    json_product = request.get_json()
+def json_to_product(json_product):
     new_product = Product()
-    new_product.name = json_product['name']
-    new_product.description = json_product['description']
+    if 'id' in json_product:
+        new_product.id = json_product['id']
+    if 'name' in json_product:
+        new_product.name = json_product['name']
+    if 'description' in json_product:
+        new_product.description = json_product['description']
     new_product.count = json_product['count']
-    new_product.price = json_product['price']
+    if 'price' in json_product:
+        new_product.price = json_product['price']
     return new_product
