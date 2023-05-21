@@ -24,4 +24,4 @@ api.add_resource(UsersList, '/users')
 api.add_resource(Users,  '/users/<int:id>')
 
 # receipt routs
-api.add_resource(Buy, '/buy')
+api.add_resource(AddToCart, '/add-to-cart')

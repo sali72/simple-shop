@@ -17,11 +17,20 @@ class User(db.Model, SerializerMixin, UserMixin):
     receipts = relationship("Receipt", back_populates='user')
 
 
-receipt_product = db.Table(
-    'receipt_product',
-    db.Column('receipt_id', db.Integer, db.ForeignKey('receipt.id'), primary_key=True),
-    db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True)
-)
+# receipt_product = db.Table(
+#     'receipt_product',
+#     db.Column('receipt_id', db.Integer, db.ForeignKey('receipt.id'), primary_key=True),
+#     db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True)
+# )
+
+class ReceiptProduct(db.Model, SerializerMixin):
+    __tablename__ = 'receipt_product'
+    receipt_id = db.Column(db.Integer, db.ForeignKey('receipt.id'), primary_key=True)
+    receipt = relationship("Receipt", back_populates='receipt_products')
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), primary_key=True)
+    product = relationship("Product", back_populates='receipt_products')
+    count = db.Column(db.Integer)
+
 
 class Receipt(db.Model, SerializerMixin):
     __tablename__ = 'receipt'
@@ -32,8 +41,8 @@ class Receipt(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     # one receipt has one user
     user = relationship("User", back_populates='receipts')
-    # one receipt has many products
-    products = db.relationship('Product', secondary=receipt_product, back_populates='receipts')
+    # one receipt has many receipt_products
+    receipt_products = db.relationship('ReceiptProduct', back_populates='receipt')
 
     # products = db.relationship('Product', secondary=receipt_product, lazy='subquery', 
     #                 #  back_populates='receipts' , 
@@ -53,5 +62,6 @@ class Product(db.Model, SerializerMixin):
     price = db.Column(db.Integer)
     count = db.Column(db.Integer)
     # one product has many receipt_product
-    receipts = db.relationship('Receipt', secondary=receipt_product, back_populates='products')
+    receipt_products = db.relationship('ReceiptProduct', back_populates='product')
+
 

@@ -5,32 +5,48 @@ from flask_login import login_required, current_user
 from security import admin_only, load_user
 from models.models import db, User
 from services.receipt_service import *
+from services.user_service import *
 from controllers.product_controller import *
+from datetime import datetime
 
 
-class Buy(Resource):
+class AddToCart(Resource):
 
     @login_required
     def post(self):
         logged_in_user = current_user._get_current_object()
-        # finding if an open receipt exists
-        logged_in_receipt = Receipt()
-        if not logged_in_user.receipts:
-            print('receipts are empty, new receipt is created')
-        elif logged_in_user.receipts:
-            for receipt in logged_in_user.receipts:
-                if not receipt.is_finalized:
-                    logged_in_receipt = receipt
-                    print('a not finalized receipt exists')
-                    break
-        else:
-            print('receipts are finalized, new receipt is created')
+        logged_in_receipt = self.find_receipt(logged_in_user)
         # adding the products to receipt
-        products = request.get_json()
-        # for json_product in products:
-        #     product = json_to_product(json_product)
-        #     logged_in_receipt.products.append(product)
-        update_receipt_for_buy_logic(logged_in_receipt.id ,products)
+        json_products = request.get_json()
+        products = []
+        # read product objects
+        # TODO handle count
+        for json_product in json_products:
+            read_product = read_one_product_logic(json_product['id'])
+            products.append(read_product)
+        update_receipt_for_buy_logic(logged_in_user, logged_in_receipt, products)
+
+    def find_receipt(self, user):
+        # finding if an open receipt exists
+        if not user.receipts:
+            print('receipts are empty, new receipt will be created')
+        elif user.receipts:
+            for receipt in user.receipts:
+                if not receipt.is_finalized:
+                    print('a not finalized receipt exists')
+                    return receipt
+        else:
+            print('receipts are finalized, new receipt will be created')
+        # creating a new receipt
+        new_receipt = Receipt()
+        new_receipt.is_finalized = False
+        now = datetime.now()
+        new_receipt.date = now
+        create_receipt_logic(new_receipt)
+        # adding the receipt to user
+        user.receipts.append(new_receipt)
+        update_user_logic(user.id, user)
+        return read_receipt_by_date_logic(now)
 
 
 class ReceiptsList(Resource):

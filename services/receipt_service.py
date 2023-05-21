@@ -3,7 +3,6 @@ from flask import jsonify
 from models.models import  db
 from models.models import Receipt
 from services.main_service import exception_handler
-from services.product_service import defined_read_one_product_logic
 
 # main methods
 @exception_handler
@@ -23,7 +22,11 @@ def read_all_receipt_logic():
 
 @exception_handler   
 def read_receipts_by_userId_logic(id):
-    return db.session.execute(db.select(Receipt).filter_by(user=id)).scalar()
+    return db.session.execute(db.select(Receipt).filter_by(user=id)).scalars()
+
+@exception_handler   
+def read_receipt_by_date_logic(date):
+    return db.session.execute(db.select(Receipt).filter_by(date=date)).scalar()
     
 @exception_handler
 def read_one_receipt_logic(id):
@@ -42,14 +45,12 @@ def update_receipt_logic(id, updated_receipt:Receipt):
     return {"success": "Receipt updated"}, 200
 
 @exception_handler
-def update_receipt_for_buy_logic(id, products):
-    receipt = read_one_receipt_logic(id)
-    print(products)
-    read_products = []
-    for product in products:
-        read_product = defined_read_one_product_logic(product['id'])
-        read_products.append(read_product)
-    receipt.products = read_products
+def update_receipt_for_buy_logic(user, receipt, products):
+    # replaces all the products with new ones
+    receipt.products = products
+    for r in user.receipts:
+        if r is receipt:
+            r.products = products
     db.session.commit()
     return {"success": "Receipt updated"}, 200
 

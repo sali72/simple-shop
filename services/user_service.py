@@ -32,6 +32,7 @@ def update_user_logic(id, updated_user:User):
     user.description = updated_user.description
     user.count = updated_user.count
     user.price = updated_user.price
+    user.receipts = updated_user.receipts
     db.session.commit()
     return {"success": "User updated"}, 200
 
