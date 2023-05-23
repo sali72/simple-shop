@@ -9,10 +9,9 @@ db = SQLAlchemy()
 class User(db.Model, SerializerMixin, UserMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Integer, primary_key=False)
+    name = db.Column(db.String(1000), primary_key=False)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    name = db.Column(db.String(1000))
     # one user has many receipts
     receipts = relationship("Receipt", back_populates='user')
 

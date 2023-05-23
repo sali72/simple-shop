@@ -1,5 +1,3 @@
-import json
-from flask import jsonify
 from models.models import  db
 from models.models import Product
 from services.main_service import exception_handler

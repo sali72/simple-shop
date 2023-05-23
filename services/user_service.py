@@ -29,9 +29,7 @@ def read_one_user_logic(id):
 def update_user_logic(id, updated_user:User):
     user = read_one_user_logic(id)
     user.name = updated_user.name
-    user.description = updated_user.description
-    user.count = updated_user.count
-    user.price = updated_user.price
+    user.email = updated_user.email
     user.receipts = updated_user.receipts
     db.session.commit()
     return {"success": "User updated"}, 200
