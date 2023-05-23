@@ -16,12 +16,24 @@ class FinishPurchase(Resource):
         logged_in_user = current_user._get_current_object()
         logged_in_receipt = find_receipt(logged_in_user)
         # if transaction completed & there is something in the cart
-        if logged_in_receipt.receipt_products != []:
+        r_ps = logged_in_receipt.receipt_products
+        if r_ps != []:
+            # reduce the products from db
+            for r_p in r_ps:
+                product = read_one_product_logic(r_p.product_id)
+                if (product.count - r_p.count) > 0:
+                    product.count = (product.count - r_p.count)
+                else:
+                    {"error": f"not enough {product.name}"}
+                update_product_logic(product.id, product)
+            
             logged_in_receipt.is_finalized = True
             update_receipt_logic(logged_in_receipt.id, logged_in_receipt)
             return {"success": "your purchase is finalized"}
         else:
             return {"error": "maybe your cart is empty"}
+        
+
 
 class AddToCart(Resource):
 
